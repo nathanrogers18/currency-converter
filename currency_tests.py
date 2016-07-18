@@ -1,7 +1,7 @@
 from nose.tools import raises
 from currency import Currency, DifferentCurrencyCodeError, CURRENCY_CONVERSIONS
 from currency_converter import CurrencyConverter, UnknownCurrencyCodeError
-from currency_trader import CurrencyTrader
+from currency_trader import CurrencyTrader, EpicCurrencyTrader
 
 ### Currency Tests
 
@@ -148,4 +148,22 @@ TESTED - Build a third class named CurrencyTrader. CurrencyTrader must be initia
 CurrencyTrader must have a method which returns the best currency investment over that span of time.
 For instance, if you are starting with $1,000,000, assume that you can convert your dollars to one currency at the first point in time, but that you must then convert it back to dollars at the second point in time. The best bet given two CurrencyConverters may be GBP. If USD -> GBP is 1 to 1 at the first point in time, then 1 to 0.5 at the second point in time, you can double your money.
 You do not need to modify Currency or CurrencyConverter to get this to work, but if you see a path that involves modifying them and want to give it a shot, feel free.
+"""
+
+### Epic CurrencyTrader Tests
+
+def test_currency_trader_array_of_converters():
+    currency = Currency('USD', 1)
+    converter1 = CurrencyConverter({'USD': 1.0, 'EUR': 0.5, 'JPY': 100})
+    converter2 = CurrencyConverter({'USD': 1.0, 'EUR': 2, 'JPY': 25})
+    converter3 = CurrencyConverter({'USD': 1.0, 'EUR': 2, 'JPY': 250})
+    converter4 = CurrencyConverter({'USD': 10, 'EUR': 12, 'JPY': 25})
+    trader = EpicCurrencyTrader(currency, [converter1, converter2, converter3, converter4])
+    assert trader.best_investments() == ['EUR','JPY','USD']
+
+
+"""
+You guessed it. Modify your CurrencyTrader to accept an array of CurrencyConverter objects and a starting Currency.
+If the length of the array is greater than 2, you can move your currency more than once,
+so long as it ends in the same currency code as it started. Find the best set of currency trades for your money over time.
 """
