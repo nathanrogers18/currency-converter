@@ -1,8 +1,9 @@
 from nose.tools import raises
-
 from currency import Currency, DifferentCurrencyCodeError, CURRENCY_CONVERSIONS
-
 from currency_converter import CurrencyConverter, UnknownCurrencyCodeError
+from currency_trader import CurrencyTrader
+
+### Currency Tests
 
 def test_create_create_currency_with_code_and_amount():
     one_dollar = Currency('USD', 1)
@@ -94,6 +95,7 @@ TESTED - Must be able to be multiplied by an int or float and return a Currency 
 TESTED - Currency() must be able to take one argument with a currency symbol embedded in it, like "$1.20" or "€ 7.00", and figure out the correct currency code. It can also take two arguments, one being the amount and the other being the currency code.
 """
 
+### CurrencyConverter Tests
 
 def test_create_converter_with_dictionary():
     converter = CurrencyConverter({'USD': 1.0, 'EUR': 0.74})
@@ -130,4 +132,20 @@ TESTED - Must be able to take a Currency object that has one currency code it kn
 TESTED - Must be able to be created with a dictionary of three or more currency codes and conversion rates. An example would be this: {'USD': 1.0, 'EUR': 0.74, 'JPY': 120.0}, which implies that a dollar is worth 0.74 euros and that a dollar is worth 120 yen, but also that a euro is worth 120/0.74 = 162.2 yen.
 TESTED - Must be able to convert Currency in any currency code it knows about to Currency in any other currency code it knows about.
 TESTED - Must raise an UnknownCurrencyCodeError when you try to convert from or to a currency code it doesn't know about.
+"""
+
+### CurrencyTrader Tests
+
+def test_currency_trader():
+    currency = Currency('USD', 1)
+    converter1 = CurrencyConverter({'USD': 1.0, 'EUR': 0.5, 'JPY': 100})
+    converter2 = CurrencyConverter({'USD': 1.0, 'EUR': 2, 'JPY': 25})
+    trader = CurrencyTrader(currency, converter1, converter2)
+    assert trader.best_investment() == 'EUR'
+
+"""
+TESTED - Build a third class named CurrencyTrader. CurrencyTrader must be initialized with two CurrencyConverter objects from two different points in time, plus a starting Currency.
+CurrencyTrader must have a method which returns the best currency investment over that span of time.
+For instance, if you are starting with $1,000,000, assume that you can convert your dollars to one currency at the first point in time, but that you must then convert it back to dollars at the second point in time. The best bet given two CurrencyConverters may be GBP. If USD -> GBP is 1 to 1 at the first point in time, then 1 to 0.5 at the second point in time, you can double your money.
+You do not need to modify Currency or CurrencyConverter to get this to work, but if you see a path that involves modifying them and want to give it a shot, feel free.
 """
