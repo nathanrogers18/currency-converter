@@ -1,7 +1,13 @@
 class Currency:
-    def __init__(self, code, value):
+    def __init__(self, code, value=None):
         self.code = code
-        self.value = float(value)
+        if value:
+            self.value = float(value)
+        else:
+            clean_string = self.code.replace(' ', '')
+            symbol = clean_string[0]
+            self.code = CURRENCY_SYMBOLS[symbol]
+            self.value = float(clean_string[1:])
 
     def __str__(self):
         return "Currency({}, {})".format(self.code, self.value)
@@ -24,18 +30,6 @@ class Currency:
     def __eq__(self, other):
         return self.code == other.code and self.value == other.value
 
-
-class CurrencyConverter:
-    def __init__(self, currency_conversions):
-        self.currency_conversions = currency_conversions
-
-    def convert(self, Currency):
-        pass
-
-    """only need to care about USD, EURO, Yen for symbol conversions
-    e.g "$500", "€50", "¥600" convert to currency objects
-    """
-
 class DifferentCurrencyCodeError(Exception):
     pass
 
@@ -44,7 +38,9 @@ class DifferentCurrencyCodeError(Exception):
 #currencies = [('USD', 1), ('EUR', 1)]
 #[Currency(type, value) for type, value in currencies]
 
-currency_conversions = {"ADF":5.941770647653001, "ADP":150.71590052750565,
+CURRENCY_SYMBOLS = {'$':'USD', '€':'EUR', '¥':'JPY'}
+
+CURRENCY_CONVERSIONS = {"ADF":5.941770647653001, "ADP":150.71590052750565,
                         "AED":3.6724201248622843, "AFN":68.7757909215956,
                         "ALL":121.71372930866603, "AMD":476.64442326024783,
                         "ANG":1.7699115044247788, "AOA":165.0709805216243,
