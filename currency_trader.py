@@ -1,6 +1,3 @@
-from currency import Currency
-from currency_converter import CurrencyConverter
-
 class CurrencyTrader:
     def __init__(self, currency, converter1, converter2):
         self.currency = currency
